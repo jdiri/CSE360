@@ -280,7 +280,7 @@ public class DataDesign {
         private List<Book> inventory;
         private List<Transaction> transactions;
 
-        private Bookstore() {
+        public Bookstore() {
             users = new ArrayList<>();
             pendingSellers = new ArrayList<>();
             inventory = new ArrayList<>();
