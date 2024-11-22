@@ -1,6 +1,5 @@
 module ClassProject {
 	requires javafx.controls;
-	requires java.sql;
 	requires javafx.graphics;
 	requires javafx.base;
 	
