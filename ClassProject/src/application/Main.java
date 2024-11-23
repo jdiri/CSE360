@@ -14,9 +14,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             Group loginGroup = new Group();
+            BuyerView buyerView = new BuyerView();
             SellerView sellerView = new SellerView();
 
             Scene loginScene = new Scene(loginGroup, 400, 400);
+            Scene buyerScene = new Scene(buyerView, 400, 400);
             Scene sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
 
             // Login Page Setup
@@ -34,7 +36,9 @@ public class Main extends Application {
 
                 if (userId.equals("123") && password.equals("p")) {
                     primaryStage.setScene(sellerScene);
-                } else {
+                } else if (userId.equals("1234") && password.equals("wordpass")) {
+                    primaryStage.setScene(buyerScene);
+                else {
                     showAlert("Login Failed", "Invalid User ID or Password");
                 }
             });
