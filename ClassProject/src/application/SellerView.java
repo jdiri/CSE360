@@ -89,6 +89,9 @@ public class SellerView {
     	genreComboBox.getSelectionModel().clearSelection();
     	conditionComboBox.getSelectionModel().clearSelection();
     	
+    	// reset variable
+    	submittedBook = false;
+    	
     	bookstore.updateInventory(tempBook);
     }
 
