@@ -19,6 +19,9 @@ public class SellerView {
     private ComboBox<String> genreComboBox;
     private ComboBox<String> conditionComboBox;
     private DecimalFormat df;
+    private boolean submittedBook;
+    private DataDesign.Book tempBook;
+    private DataDesign.Bookstore bookstore;
 
     public SellerView() {
         df = new DecimalFormat("####0.00");
@@ -27,6 +30,9 @@ public class SellerView {
     }
 
     private void initializeSellerView() {
+    	submittedBook = false;
+    	bookstore = new DataDesign.Bookstore();
+    	
         sellerGroup.getChildren().add(createText("Title:", 50, 50));
         sellerGroup.getChildren().add(createText("Pre Markup Price:", 50, 80));
         sellerGroup.getChildren().add(createText("Genre:", 50, 110));
@@ -59,8 +65,31 @@ public class SellerView {
         sellerGroup.getChildren().add(submitButton);
 
         Button listButton = createButton("List Book", 50, 25, 540, 240);
-        listButton.setOnAction(event -> showAlert("Action Not Available", "Enter Book Information First!"));
+        listButton.setOnAction(event -> {
+        	if (!submittedBook) {
+        		showAlert("Action Not Available", "Enter Book Information First!");
+        	}
+        	else {
+        		handleListing();
+        	}
+
+        });
         sellerGroup.getChildren().add(listButton);
+    }
+    
+    
+    private void handleListing() {
+    	// Reset the inputted values
+    	sellerTitleText.setText("Title: None");
+    	sellerPriceText.setText("Final Price: $0.00");
+    	sellerGenreText.setText("Genre: None");
+    	sellerConditionText.setText("Condition: None");
+    	titleField.setText(null);
+    	priceField.setText(null);
+    	genreComboBox.getSelectionModel().clearSelection();
+    	conditionComboBox.getSelectionModel().clearSelection();
+    	
+    	bookstore.updateInventory(tempBook);
     }
 
     private void handleSubmit() {
@@ -76,12 +105,12 @@ public class SellerView {
                 showAlert("Input not valid", "Select a Quality!");
             } else {
                 sellerTitleText.setText("Title: " + bookTitle);
-				DataDesign.Book tempBook = new DataDesign.Book(bookTitle, bookPrePrice, bookCategory, bookQuality, 1, null);
+				tempBook = new DataDesign.Book(bookTitle, bookPrePrice, bookCategory, bookQuality, 1, null); //FIXME add user once users are implemented properly
                 double finalPrice = tempBook.getFinalPrice(); // Assuming some markup logic
                 sellerPriceText.setText("Price: $" + df.format(finalPrice));
                 sellerGenreText.setText("Genre: " + bookCategory);
-                System.out.print(bookCategory);
                 sellerConditionText.setText("Condition: " + bookQuality);
+                submittedBook = true;
             }
         } catch (Exception e) {
             showAlert("Input not valid", "The Inputted Price is not a Number!");
