@@ -38,7 +38,7 @@ public class Main extends Application {
 
 
             loginScene = new Scene(loginGroup, 400, 400);
-            buyerScene = new Scene(buyerView.getBuyerGroup(), 600, 900);
+            buyerScene = new Scene(buyerView.getBuyerGroup(), 900, 900);
             sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
             signupScene = new Scene(signupView.getSignupGroup(), 400, 400);
 

@@ -50,19 +50,20 @@ public class BuyerView {
         //Set up Book List
         bookListView = new ListView<>();
         bookListView.setLayoutX(350);
-        bookListView.setLayoutY(30);
+        bookListView.setLayoutY(50);
         bookListView.setPrefSize(260, 550);
         buyerGroup.getChildren().add(bookListView);
         
         //Set up search field 
         searchTextField = new TextField();
         searchTextField.setPromptText("Search by Book Title...");
-        searchTextField.setLayoutX(150);
-        searchTextField.setLayoutY(135);
+        searchTextField.setLayoutX(350);
+        searchTextField.setLayoutY(30);
+        searchTextField.setPrefSize(260, 20);
         buyerGroup.getChildren().add(searchTextField);
 
         //Set up Search Button
-        Button searchButton = createButton("Search Books", 120, 30, 50, 380);
+        Button searchButton = createButton("Search Books", 120, 30, 50, 120);
         searchButton.setOnAction(event -> searchBooks());
         buyerGroup.getChildren().add(searchButton);
 
@@ -73,8 +74,12 @@ public class BuyerView {
         String selectedCategory = categoryComboBox.getValue();
         String selectedCondition = conditionComboBox.getValue();
         
-        if (searchQuery.isEmpty() && selectedCategory == null || selectedCondition == null) {
-            showAlert("Selection Missing", "Please select both a category and a condition.");
+        if (searchQuery.isEmpty()) {
+            // If search query is empty, make sure both category and condition are selected
+            if (selectedCategory == null || selectedCondition == null) {
+                showAlert("Missing Selection", "Please select both category and condition.");
+                return;
+            }
         } else {
         	Bookstore bookstore = Bookstore.getInstance();
             ObservableList<String> filteredBooks = FXCollections.observableArrayList();
