@@ -1,2 +1,5 @@
 1234567890,password,buyer,true
 0987654321,password,seller,true
+1111111111,password,seller,false
+2222222222,password,seller,false
+3333333333,password,seller,false

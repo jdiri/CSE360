@@ -10,6 +10,7 @@ import javafx.scene.Group;
 import javafx.stage.Stage;
 import application.DataDesign.Seller;
 import application.DataDesign.User;
+import application.DataDesign.Admin;
 
 public class Main extends Application {
 	private User user;
@@ -22,10 +23,12 @@ public class Main extends Application {
 	private BuyerView buyerView;
 	private SellerView sellerView;
 	private SignupView signupView;
+	private AdminView adminView;
 	private Scene loginScene;
 	private Scene buyerScene;
 	private Scene sellerScene;
 	private Scene signupScene;
+	private Scene adminScene;
 	
 	
     @Override
@@ -35,12 +38,13 @@ public class Main extends Application {
             buyerView = new BuyerView();
             sellerView = new SellerView();
             signupView = new SignupView();
-
+            adminView = new AdminView();
 
             loginScene = new Scene(loginGroup, 400, 400);
-            buyerScene = new Scene(buyerView.getBuyerGroup(), 900, 900);
+            buyerScene = new Scene(buyerView.getBuyerGroup(), 600, 900);
             sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
             signupScene = new Scene(signupView.getSignupGroup(), 400, 400);
+            adminScene = new Scene(adminView.getAdminGroup(), 600, 400);
 
 
             // Login Page Setup
@@ -109,6 +113,10 @@ public class Main extends Application {
         		else {
         			showAlert("Authentication Error", "Not Yet Authorized for Seller Role!");
         		}
+        	}
+        	else if (userType == "admin") {
+        		adminView.setCurrentUser((Admin)user);
+        		return adminScene;
         	}
         	else {
         		return null;
