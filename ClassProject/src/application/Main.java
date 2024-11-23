@@ -36,10 +36,12 @@ public class Main extends Application {
             sellerView = new SellerView();
             signupView = new SignupView();
 
+
             loginScene = new Scene(loginGroup, 400, 400);
-            buyerScene = new Scene(buyerView.getBuyerGroup(), 800, 400);
+            buyerScene = new Scene(buyerView.getBuyerGroup(), 600, 900);
             sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
             signupScene = new Scene(signupView.getSignupGroup(), 400, 400);
+
 
             // Login Page Setup
             userIdField = createTextField("ASU ID", 200, 100, 120);
