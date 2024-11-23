@@ -7,6 +7,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
 
 import java.text.DecimalFormat;
+import application.DataDesign.Seller;
 
 public class SellerView {
     private Group sellerGroup;
@@ -22,11 +23,17 @@ public class SellerView {
     private boolean submittedBook;
     private DataDesign.Book tempBook;
     private DataDesign.Bookstore bookstore;
+    private Seller currentUser;
+    
 
     public SellerView() {
         df = new DecimalFormat("####0.00");
         sellerGroup = new Group();
         initializeSellerView();
+    }
+    
+    public void setCurrentUser(Seller currentUser) {
+    	this.currentUser = currentUser;
     }
 
     private void initializeSellerView() {
@@ -108,7 +115,7 @@ public class SellerView {
                 showAlert("Input not valid", "Select a Quality!");
             } else {
                 sellerTitleText.setText("Title: " + bookTitle);
-				tempBook = new DataDesign.Book(bookTitle, bookPrePrice, bookCategory, bookQuality, 1, null); //FIXME add user once users are implemented properly
+				tempBook = new DataDesign.Book(bookTitle, bookPrePrice, bookCategory, bookQuality, 1, currentUser); //FIXME add user once users are implemented properly
                 double finalPrice = tempBook.getFinalPrice(); // Assuming some markup logic
                 sellerPriceText.setText("Price: $" + df.format(finalPrice));
                 sellerGenreText.setText("Genre: " + bookCategory);

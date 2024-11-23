@@ -8,40 +8,63 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.Group;
 import javafx.stage.Stage;
+import application.DataDesign.Seller;
+import application.DataDesign.User;
 
 public class Main extends Application {
+	private User user;
+	private DataDesign.Bookstore bookstore = new DataDesign.Bookstore();
+	private TextField userIdField;
+	private TextField passwordField;
+	private Button loginButton;
+	private Button signupButton;
+	private Group loginGroup;
+	private BuyerView buyerView;
+	private SellerView sellerView;
+	private SignupView signupView;
+	private Scene loginScene;
+	private Scene buyerScene;
+	private Scene sellerScene;
+	private Scene signupScene;
+	
+	
     @Override
     public void start(Stage primaryStage) {
         try {
-            Group loginGroup = new Group();
-            BuyerView buyerView = new BuyerView();
-            SellerView sellerView = new SellerView();
+            loginGroup = new Group();
+            buyerView = new BuyerView();
+            sellerView = new SellerView();
+            signupView = new SignupView();
 
-            Scene loginScene = new Scene(loginGroup, 400, 400);
-            Scene buyerScene = new Scene(buyerView.getBuyerGroup(), 400, 400);
-            Scene sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
+            loginScene = new Scene(loginGroup, 400, 400);
+            buyerScene = new Scene(buyerView.getBuyerGroup(), 800, 400);
+            sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
+            signupScene = new Scene(signupView.getSignupGroup(), 400, 400);
 
             // Login Page Setup
-            TextField userIdField = createTextField("ASU ID", 200, 100, 120);
-            TextField passwordField = createTextField("Password", 200, 100, 160);
-            Button loginButton = createButton("Login", 80, 30, 150, 200);
+            userIdField = createTextField("ASU ID", 200, 100, 120);
+            passwordField = createTextField("Password", 200, 100, 160);
+            loginButton = createButton("Login", 80, 30, 150, 200);
+            signupButton = createButton("Sign Up", 80, 30, 150, 240);
+            
 
             //add the elements
-            loginGroup.getChildren().addAll(userIdField, passwordField, loginButton);
+            loginGroup.getChildren().addAll(userIdField, passwordField, loginButton, signupButton);
             
             //login to seller needs to be updated to hub
             loginButton.setOnAction(event -> {
-                String userId = userIdField.getText();
-                String password = passwordField.getText();
-
-                if (userId.equals("123") && password.equals("p")) {
-                    primaryStage.setScene(sellerScene);
-                } else if (userId.equals("1234") && password.equals("wordpass")) {
-                    primaryStage.setScene(buyerScene);
+                Scene tempScene = handleLogin();
+                if (tempScene != null) {
+                	
+                	primaryStage.setScene(tempScene);
                 }
                 else {
-                    showAlert("Login Failed", "Invalid User ID or Password");
+                	// For testing purposes only
                 }
+            });
+            
+            signupButton.setOnAction(event -> {
+            	primaryStage.setScene(signupScene);
             });
             
             primaryStage.setScene(loginScene);
@@ -53,7 +76,47 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+    	Group loginGroup = new Group();
+        BuyerView buyerView = new BuyerView();
+        SellerView sellerView = new SellerView();
+        SignupView signupView = new SignupView();
         launch(args);
+    }
+    
+    private Scene handleLogin () {
+    	String userId = userIdField.getText();
+        String password = passwordField.getText();
+        
+        user = bookstore.authenticateUser(userId, password);
+        
+        if (user == null) {
+        	if (userId.equals("1234") && password.equals("wordpass")) {
+                return buyerScene;
+            }
+            else {
+                showAlert("Login Failed", "Invalid User ID or Password");
+                return null;
+            }
+        }
+        else {
+        	String userType = user.getRole();
+        	if (userType == "buyer") {
+        		return buyerScene;
+        	}
+        	else if (userType == "seller") {
+        		if (user.login()) {
+        			sellerView.setCurrentUser((Seller)user);
+        			return sellerScene;
+        		}
+        		else {
+        			showAlert("Authentication Error", "Not Yet Authorized for Seller Role!");
+        		}
+        	}
+        	else {
+        		return null;
+        	}
+        }
+        return null;
     }
     
     private void showAlert(String header, String content) {
