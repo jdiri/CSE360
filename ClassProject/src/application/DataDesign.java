@@ -36,7 +36,7 @@ public class DataDesign {
         public double calculateFinalPrice() {
      
             double markup = switch (condition.toLowerCase()) {
-                case "used like new" -> 0.25;   
+                case "Used Like New" -> 0.25;   
                 case "moderately used" -> 0.15; 
                 case "heavily used" -> 0.05;     
                 default -> 0.15;
