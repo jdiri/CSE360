@@ -17,4 +17,8 @@ public class BuyerView {
 	private void initializeBuyerView() {
 		
 	}
+	
+	public Group getBuyerGroup() {
+        return buyerGroup;
+    }
 }

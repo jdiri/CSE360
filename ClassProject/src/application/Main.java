@@ -18,7 +18,7 @@ public class Main extends Application {
             SellerView sellerView = new SellerView();
 
             Scene loginScene = new Scene(loginGroup, 400, 400);
-            Scene buyerScene = new Scene(buyerView, 400, 400);
+            Scene buyerScene = new Scene(buyerView.getBuyerGroup(), 400, 400);
             Scene sellerScene = new Scene(sellerView.getSellerGroup(), 800, 400);
 
             // Login Page Setup
@@ -38,6 +38,7 @@ public class Main extends Application {
                     primaryStage.setScene(sellerScene);
                 } else if (userId.equals("1234") && password.equals("wordpass")) {
                     primaryStage.setScene(buyerScene);
+                }
                 else {
                     showAlert("Login Failed", "Invalid User ID or Password");
                 }
