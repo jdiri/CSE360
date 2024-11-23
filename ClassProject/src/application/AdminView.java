@@ -24,6 +24,7 @@ public class AdminView {
 	private DataDesign.Bookstore bookstore = new DataDesign.Bookstore();
 	private List<User> potentialSellers;
 	private ObservableList<Long> potentialSellersID = FXCollections.observableArrayList();
+	private ListView potentialSellerList;
 	
 	public AdminView() {
         adminGroup = new Group();
@@ -41,7 +42,7 @@ public class AdminView {
 		
 		potentialSellers = bookstore.getPendingSellers();
 		
-		ListView potentialSellerList = new ListView();
+		potentialSellerList = new ListView();
 		
 		for (User seller: potentialSellers) {
 			potentialSellersID.add(Long.parseLong(seller.getASUID()));
@@ -55,7 +56,18 @@ public class AdminView {
 		acceptButton.setStyle("-fx-base: Green");
 		Button rejectButton = createButton("Reject User", 90, 50, 150, 220);
 		rejectButton.setStyle("-fx-base: Red");
+		
+		Button exitButton = createButton("X", 10, 10, 10, 10);
+		exitButton.setStyle("-fx-base: Red");
 		adminGroup.getChildren().addAll(acceptButton, rejectButton);
+		
+		acceptButton.setOnAction(event -> {
+			handleAccept();
+		});
+		rejectButton.setOnAction(event -> {
+			handleReject();
+		});
+		
 		
 		
 	}
@@ -63,6 +75,48 @@ public class AdminView {
 	public void setCurrentUser(Admin currentUser) {
     	this.currentUser = currentUser;
     }
+	
+	private void handleAccept() {
+		String potentialID = potentialSellerList.getSelectionModel().getSelectedItem() + "";
+		String tempID = "";
+
+		for (User seller : potentialSellers) {
+			tempID = seller.getASUID();
+			if (tempID.equals(potentialID)) {
+				bookstore.approveSeller(seller);
+				break;
+			}
+		}
+		potentialSellers = bookstore.getPendingSellers();
+		potentialSellerList.getItems().clear();
+		for (User seller: potentialSellers) {
+			potentialSellersID.add(Long.parseLong(seller.getASUID()));
+		}
+		
+		potentialSellerList.setItems(potentialSellersID);
+	}
+	
+	private void handleReject() {
+		String potentialID = potentialSellerList.getSelectionModel().getSelectedItem() + "";
+		String tempID = "";
+
+		for (User seller : potentialSellers) {
+			tempID = seller.getASUID();
+			if (tempID.equals(potentialID)) {
+				bookstore.denySeller(seller);
+				break;
+			}
+		}
+		potentialSellers = bookstore.getPendingSellers();
+		potentialSellerList.getItems().clear();
+		for (User seller: potentialSellers) {
+			potentialSellersID.add(Long.parseLong(seller.getASUID()));
+		}
+		
+		potentialSellerList.setItems(potentialSellersID);
+		
+		
+	}
 	
 	private void showAlert(String header, String content) {
         Alert errorAlert = new Alert(AlertType.ERROR);

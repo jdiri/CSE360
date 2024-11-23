@@ -61,16 +61,17 @@ public class Main extends Application {
             loginButton.setOnAction(event -> {
                 Scene tempScene = handleLogin();
                 if (tempScene != null) {
-                	
                 	primaryStage.setScene(tempScene);
                 }
                 else {
                 	// For testing purposes only
                 }
+                primaryStage.show();
             });
             
             signupButton.setOnAction(event -> {
             	primaryStage.setScene(signupScene);
+            	primaryStage.show();
             });
             
             primaryStage.setScene(loginScene);
