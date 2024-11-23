@@ -78,10 +78,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-    	Group loginGroup = new Group();
-        BuyerView buyerView = new BuyerView();
-        SellerView sellerView = new SellerView();
-        SignupView signupView = new SignupView();
         launch(args);
     }
     
