@@ -20,12 +20,16 @@ public class BuyerView {
 	private ComboBox<String> categoryComboBox;
     private ComboBox<String> conditionComboBox;
     private ListView<String> bookListView;
+    private ObservableList<String> checkoutList;
     private TextField searchTextField;
+    private Bookstore bookstore;
 	private DecimalFormat df;
 	
 	public BuyerView() {
         df = new DecimalFormat("####0.00");
         buyerGroup = new Group();
+        checkoutList = FXCollections.observableArrayList();
+        bookstore = Bookstore.getInstance();
         initializeBuyerView();
     }
 	
@@ -66,8 +70,42 @@ public class BuyerView {
         Button searchButton = createButton("Search Books", 120, 30, 50, 120);
         searchButton.setOnAction(event -> searchBooks());
         buyerGroup.getChildren().add(searchButton);
+        
+        //Set up checkout button
+        Button checkoutButton = createButton("Proceed to Checkout", 150, 30, 50, 430);
+        checkoutButton.setOnAction(event -> proceedToCheckout());
+        buyerGroup.getChildren().add(checkoutButton);
 
 	}
+	
+	private void proceedToCheckout() {
+        // Iterate through the checkout list and process the transactions
+        for (String bookString : checkoutList) {
+            String[] bookDetails = bookString.split(",");
+            String title = bookDetails[0];
+            int quantityToBuy = Integer.parseInt(bookDetails[1]);
+
+            Book book = bookstore.getInventory().stream()
+                .filter(b -> b.getTitle().equals(title))
+                .findFirst()
+                .orElse(null);
+
+            if (book != null) {
+                // Update book quantity
+                int newQuantity = book.getQuantity() - quantityToBuy;
+                book.updateQuantity();;
+
+                // Update the inventory file
+                //bookstore.saveBooks(); // This method will save the updated inventory to book.txt
+            }
+        }
+
+        // Show success message
+        showAlert("Purchase Complete", "Your books have been successfully purchased.");
+
+        // Clear the checkout list
+        checkoutList.clear();
+    }
 	
 	private void searchBooks() {
 		String searchQuery = searchTextField.getText().toLowerCase();
