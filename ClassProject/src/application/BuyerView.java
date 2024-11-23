@@ -2,6 +2,8 @@ package application;
 
 import java.text.DecimalFormat;
 
+import application.DataDesign.Book;
+import application.DataDesign.Bookstore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -9,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 
@@ -17,6 +20,7 @@ public class BuyerView {
 	private ComboBox<String> categoryComboBox;
     private ComboBox<String> conditionComboBox;
     private ListView<String> bookListView;
+    private TextField searchTextField;
 	private DecimalFormat df;
 	
 	public BuyerView() {
@@ -49,6 +53,13 @@ public class BuyerView {
         bookListView.setLayoutY(30);
         bookListView.setPrefSize(260, 550);
         buyerGroup.getChildren().add(bookListView);
+        
+        //Set up search field 
+        searchTextField = new TextField();
+        searchTextField.setPromptText("Search by Book Title...");
+        searchTextField.setLayoutX(150);
+        searchTextField.setLayoutY(135);
+        buyerGroup.getChildren().add(searchTextField);
 
         //Set up Search Button
         Button searchButton = createButton("Search Books", 120, 30, 50, 380);
@@ -58,14 +69,33 @@ public class BuyerView {
 	}
 	
 	private void searchBooks() {
+		String searchQuery = searchTextField.getText().toLowerCase();
         String selectedCategory = categoryComboBox.getValue();
         String selectedCondition = conditionComboBox.getValue();
-
-        if (selectedCategory == null || selectedCondition == null) {
+        
+        if (searchQuery.isEmpty() && selectedCategory == null || selectedCondition == null) {
             showAlert("Selection Missing", "Please select both a category and a condition.");
         } else {
-           ///search needs to be implemented
+        	Bookstore bookstore = Bookstore.getInstance();
+            ObservableList<String> filteredBooks = FXCollections.observableArrayList();
+
+            for (Book book : bookstore.getBooksByFilter(selectedCategory, selectedCondition)) {
+                // If title is provided, match the title with the search query
+                if (searchQuery.isEmpty() || book.getTitle().toLowerCase().contains(searchQuery)) {
+                    filteredBooks.add(formatBookDisplay(book));
+                }
+            }
+
+            if (filteredBooks.isEmpty()) {
+                showAlert("No Books Found", "No books match your criteria.");
+            } else {
+                bookListView.setItems(filteredBooks);
+            }
         }
+    }
+	
+	private String formatBookDisplay(Book book) {
+		return String.format("%s - $%.2f - Qty: %d", book.getTitle(), book.getPreMarkupPrice(), book.getQuantity());
     }
 	
 	public Group getBuyerGroup() {
