@@ -129,6 +129,17 @@ public class DataDesign {
         }
 
         public void addToCart(Book book) {cart.add(book);}
+        public void addToCart(Book book, int quantity) {
+            if (book.getQuantity() < quantity) {
+                System.out.println("Not enough stock available!");
+                return;
+            }
+            for (int i = 0; i < quantity; i++) {
+                cart.add(book);
+                book.updateQuantity();
+            }
+            System.out.println(quantity + " copies of " + book.getTitle() + " added to cart.");
+        }
 
         public void removeFromCart(Book book) {cart.remove(book);}
         
